@@ -100,7 +100,7 @@ const Footer = () => {
               <aside className="grid-flow-row items-center">
                 <Logo />
                 <div>
-                  <span>&copy;2026 HeroKidz. All rights reserved.</span>
+                  <span>&copy; {new Date().getFullYear()} HeroKidz. All rights reserved.</span>
                 </div>
               </aside>
               <nav className="md:place-self-center md:justify-self-end">
