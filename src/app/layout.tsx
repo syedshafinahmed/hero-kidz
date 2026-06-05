@@ -1,12 +1,28 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "@/components/layouts/Footer";
 import Navbar from "@/components/layouts/Navbar";
 
 const lexend = Lexend({
   weight: ["100", "200", "400", "500", "600", "800"],
-})
+});
+
+export const fontBangla = localFont({
+  src: [
+    {
+      path: "../../public/fonts/mayaboti-normal.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    // {
+    //   path: "/public/fonts/mayaboti-bold.ttf",
+    //   weight: "700",
+    //   style: "normal",
+    // },
+  ],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,7 +41,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Navbar />
-        {children}
+        <main className="min-h-[calc(100vh-287px)]">{children}</main>
         <Footer />
       </body>
     </html>

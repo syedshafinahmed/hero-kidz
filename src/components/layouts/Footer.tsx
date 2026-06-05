@@ -97,8 +97,11 @@ const Footer = () => {
             </footer>
 
             <footer className="footer border-base-300 border-t px-2 py-10">
-              <aside className="grid-flow-col items-center">
+              <aside className="grid-flow-row items-center">
                 <Logo />
+                <div>
+                  <span>&copy;2026 HeroKidz. All rights reserved.</span>
+                </div>
               </aside>
               <nav className="md:place-self-center md:justify-self-end">
                 <div className="grid grid-flow-col gap-4">
