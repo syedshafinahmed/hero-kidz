@@ -1,4 +1,4 @@
-import { fontBangla } from "@/app/layout";
+import { fontBangla } from "@/lib/fonts";
 import { ArrowRight, Check, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
