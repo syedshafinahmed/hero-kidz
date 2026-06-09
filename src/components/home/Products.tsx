@@ -1,12 +1,15 @@
 "use client";
-import products from "@/data/products.json";
+import { useState, useEffect } from "react";
+import productsJson from "@/data/products.json";
 import Image from "next/image";
 import Link from "next/link";
 import { MoveRight, SquareArrowOutUpRight, Star, StarHalf } from "lucide-react";
 import { RiShoppingCart2Line } from "react-icons/ri";
 import { fontBangla } from "@/lib/fonts";
 
-export const ProductCard = ({ product }: { product: typeof products[0] }) => {
+type ProductType = typeof productsJson[0];
+
+export const ProductCard = ({ product }: { product: ProductType }) => {
   const discount = product.discount ?? 0;
   const discountedPrice = discount > 0
     ? Math.round(product.price * (1 - discount / 100))
@@ -26,6 +29,7 @@ export const ProductCard = ({ product }: { product: typeof products[0] }) => {
           src={product.image}
           alt={product.title}
           fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {discount > 0 && (
@@ -103,14 +107,48 @@ export const ProductCard = ({ product }: { product: typeof products[0] }) => {
   );
 };
 
+export const SkeletonCard = () => (
+  <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col animate-pulse">
+    <div className="aspect-square bg-slate-100" />
+    <div className="p-4 flex flex-col gap-2 flex-1">
+      <div className="h-3 bg-slate-100 rounded w-1/2" />
+      <div className="h-4 bg-slate-100 rounded w-3/4" />
+      <div className="h-3 bg-slate-100 rounded w-1/4" />
+      <div className="h-4 bg-slate-100 rounded w-1/3 mt-1" />
+      <div className="flex gap-2 mt-4">
+        <div className="flex-1 h-8 bg-slate-100 rounded-sm" />
+        <div className="flex-1 h-8 bg-slate-100 rounded-sm" />
+      </div>
+    </div>
+  </div>
+);
+
 const Products = () => {
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProducts(data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching products:", err);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div className="mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Our <span className="text-primary">Products</span></h2>
           <p className="text-slate-500 mt-2 text-sm">
-            {products.length} learning kits for curious minds
+            {loading ? "..." : products.length} learning kits for curious minds
           </p>
         </div>
         <Link href="/products" className="group btn btn-primary hover:bg-secondary transition-colors">
@@ -118,9 +156,11 @@ const Products = () => {
         </Link>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {products.slice(0,8).map((product) => (
-          <ProductCard key={product.title} product={product} />
-        ))}
+        {loading
+          ? Array.from({ length: 8 }).map((_, idx) => <SkeletonCard key={idx} />)
+          : products.slice(0, 8).map((product) => (
+              <ProductCard key={product.title} product={product} />
+            ))}
       </div>
       <div className="flex justify-end mt-8">
       </div>

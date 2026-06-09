@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import products from "@/data/products.json";
+import { useState, useMemo, useEffect } from "react";
+import productsJson from "@/data/products.json";
+
+type ProductType = typeof productsJson[0];
 import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { ProductCard } from "@/components/home/Products";
 
@@ -40,9 +42,26 @@ const EmptyState = ({ query, onClear }: { query: string; onClear: () => void }) 
 // Page 
 
 const ProductsPage = () => {
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query,  setQuery]  = useState("");
   const [sort,   setSort]   = useState<SortOption>("featured");
   const [sortOpen, setSortOpen] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProducts(data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching products:", err);
+        setLoading(false);
+      });
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -81,7 +100,7 @@ const ProductsPage = () => {
     }
 
     return list;
-  }, [query, sort]);
+  }, [query, sort, products]);
 
   return (
     <div className="min-h-screen">
@@ -95,7 +114,7 @@ const ProductsPage = () => {
             All <span className="text-primary">Products</span>
           </h1>
           <p className="text-slate-500 text-sm md:text-base max-w-xl">
-            {products.length} learning kits carefully crafted for curious minds — discover
+            {loading ? "..." : products.length} learning kits carefully crafted for curious minds — discover
             the perfect kit for your little explorer.
           </p>
         </div>
@@ -188,7 +207,23 @@ const ProductsPage = () => {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filtered.length === 0 ? (
+          {loading ? (
+            Array.from({ length: 8 }).map((_, idx) => (
+              <div key={idx} className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col animate-pulse">
+                <div className="aspect-square bg-slate-100" />
+                <div className="p-4 flex flex-col gap-2 flex-1">
+                  <div className="h-3 bg-slate-100 rounded w-1/2" />
+                  <div className="h-4 bg-slate-100 rounded w-3/4" />
+                  <div className="h-3 bg-slate-100 rounded w-1/4" />
+                  <div className="h-4 bg-slate-100 rounded w-1/3 mt-1" />
+                  <div className="flex gap-2 mt-4">
+                    <div className="flex-1 h-8 bg-slate-100 rounded-sm" />
+                    <div className="flex-1 h-8 bg-slate-100 rounded-sm" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : filtered.length === 0 ? (
             <EmptyState query={query} onClear={() => setQuery("")} />
           ) : (
             filtered.map((product) => (
