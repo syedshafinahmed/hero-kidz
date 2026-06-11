@@ -12,6 +12,7 @@ import {
   ChevronUp,
   CheckCircle2,
   PackageCheck,
+  CreditCard,
 } from "lucide-react";
 import { RiShoppingCart2Line } from "react-icons/ri";
 import { FaYoutube } from "react-icons/fa";
@@ -198,28 +199,32 @@ export default function ProductDetailPage() {
         <div className="flex flex-col gap-5">
           {/* Bangla name */}
           <p
-            className={`text-xs italic text-primary tracking-tight font-medium ${fontBangla.className}`}
+            className={`text-xl italic text-primary tracking-tight font-medium ${fontBangla.className}`}
           >
             {product.bangla}
           </p>
 
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug">
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 leading-snug">
             {product.title}
           </h1>
 
           {/* Rating row */}
-          <div className="flex items-center gap-2">
-            <Stars rating={product.ratings} />
-            <span className="text-sm font-semibold text-slate-700">
-              {product.ratings}
-            </span>
-            <span className="text-sm text-slate-400">
-              · {product.reviews} reviews
-            </span>
-            <span className="text-sm text-slate-400">
-              · {product.sold} sold
-            </span>
+          <div className="flex flex-col justify-center-center gap-2">
+            <div className="flex gap-1 items-center">
+              <Stars rating={product.ratings} />
+              <span className="text-sm font-semibold text-slate-700">
+                {product.ratings}
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-sm text-yellow-600 bg-yellow-50 px-3 py-0.5 rounded-full">
+                 {product.reviews} reviews
+              </span>
+              <span className="text-sm text-blue-600 bg-blue-50 px-3 py-0.5 rounded-full">
+                 {product.sold} sold
+              </span>
+            </div>
           </div>
 
           {/* Price */}
@@ -232,7 +237,7 @@ export default function ProductDetailPage() {
                 <span className="text-base text-slate-400 line-through">
                   ৳{product.price.toLocaleString()}
                 </span>
-                <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-3 py-0.5 rounded-full">
                   Save ৳{(product.price - discountedPrice).toLocaleString()}
                 </span>
               </>
@@ -245,7 +250,7 @@ export default function ProductDetailPage() {
               {product.info.map((point, i) => (
                 <li
                   key={i}
-                  className={`flex items-start gap-2 text-sm text-slate-600 ${fontBangla.className}`}
+                  className={`flex items-start gap-2 text-base text-slate-600 ${fontBangla.className}`}
                 >
                   <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   {point}
@@ -278,7 +283,7 @@ export default function ProductDetailPage() {
             </button>
 
             <button className="flex-1 flex items-center justify-center gap-2 py-3 px-5 rounded-xl text-sm font-semibold border border-primary text-primary hover:bg-primary/5 transition-colors active:scale-[0.98]">
-              <ShoppingCart className="w-4 h-4" />
+              <CreditCard className="w-4 h-4" />
               Buy now
             </button>
           </div>
